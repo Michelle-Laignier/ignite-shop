@@ -2,7 +2,8 @@ import { styled } from "..";
 
 export const HomeContainer = styled('main', {
   display: 'flex',
-  gap: '3rem',
+  // espaçamento interfere no keen slider, use a prop spacing no index.tsx
+  //gap: '3rem',
   marginLeft: 'auto',
 
   minHeight: 656,
@@ -17,7 +18,9 @@ export const Product = styled('a', {
   background: 'linear-gradient(180deg, #1EA483 0%, #7465D4 100%)',
   borderRadius: 8,
   cursor: 'pointer',
-  padding: '0.25rem',
+
+  //espaçamento interfere no keen slider, use a prop spacing no index.tsx
+  //padding: '0.25rem',
 
   position: 'relative',
   overflow: 'hidden',

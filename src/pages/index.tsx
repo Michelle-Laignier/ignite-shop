@@ -6,7 +6,7 @@ import "keen-slider/keen-slider.min.css"
 import { HomeContainer, Product } from "../styles/pages/home"
 
 import { stripe } from "@/lib/stripe"
-import { GetServerSideProps } from "next"
+import { GetStaticProps } from "next"
 
 interface HomeProps {
   products: {
@@ -43,7 +43,7 @@ export default function Home({ products }: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ['data.default_price']
   })
@@ -55,13 +55,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount / 100,
+      //price: price.unit_amount / 100,
+      // Pra ficar com R$ na frente:
+      price: new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(price.unit_amount / 100),
     }
   })
   
   return {
     props: {
       products,
-    }
+    },
+    revalidate: 60 * 60 * 2, // gerar a página a cada 2 horas. 60s * 60 * 2
   }
 }

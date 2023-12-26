@@ -78,6 +78,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  // Caso o params seja undefined ou params.id não seja uma string
+  if (!params || typeof params.id !== 'string') {
+    return {
+      notFound: true,
+    }
+  }
+
   const productId = String(params.id)
 
   const product = await stripe.products.retrieve(productId, {
@@ -86,22 +93,34 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const price = product.default_price as Stripe.Price
 
+  let productData;
+
+  // Caso o unit_amount seja null:
+  if (price.unit_amount === null) {
+    productData = {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: 'N/A',
+    };
+  } else {
+    productData = {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(price.unit_amount / 100),
+      description: product.description,
+      defaultPriceId: price.id,
+    };
+  }
+
   return {
     props: {
-      product: {
-        id: product.id,
-        name: product.name,
-        imageUrl: product.images[0],
-        //price: price.unit_amount / 100,
-        // Pra ficar com R$ na frente:
-        price: new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-        }).format(price.unit_amount / 100),
-        description: product.description,
-        defaultPriceId: price.id,
-      }
+      product: productData,
     },
     revalidate: 60 * 60 * 1, // 1 hour
-  }
-}
+  };
+};

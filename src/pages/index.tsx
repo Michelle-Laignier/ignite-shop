@@ -7,6 +7,7 @@ import "keen-slider/keen-slider.min.css"
 
 import { HomeContainer, Product } from "../styles/pages/home"
 
+import Stripe from "stripe"
 import { stripe } from "@/lib/stripe"
 import { GetStaticProps } from "next"
 
@@ -60,6 +61,15 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const products = response.data.map(product => {
     const price = product.default_price as Stripe.Price
+
+    if (price.unit_amount === null) {
+      return {
+        id: product.id,
+        name: product.name,
+        imageUrl: product.images[0],
+        price: 'N/A',
+      }
+    }
 
     return {
       id: product.id,

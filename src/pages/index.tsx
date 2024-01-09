@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import Head from "next/head"
+import { GetStaticProps } from "next"
 
 import { useKeenSlider } from "keen-slider/react"
 import "keen-slider/keen-slider.min.css"
@@ -9,7 +10,6 @@ import { HomeContainer, Product } from "../styles/pages/home"
 
 import Stripe from "stripe"
 import { stripe } from "@/lib/stripe"
-import { GetStaticProps } from "next"
 
 interface HomeProps {
   products: {
@@ -21,9 +21,19 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
+  function slidesQuantity() {
+    if(window.innerWidth <= 768) {
+      return 1.2
+    } else if (window.innerWidth <= 1024) {
+      return 1.5
+    } else {
+      return 2.5
+    }
+  }
+
   const [sliderRef] = useKeenSlider({
     slides: {
-      perView: 3,
+      perView: slidesQuantity,
       spacing: 48
     }
   })

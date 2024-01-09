@@ -12,6 +12,10 @@ export const SuccessContainer = styled('main', {
   h1: {
     color: '$gray100',
     fontSize: '$2xl',
+
+    '@media (max-width: 768px)': {
+      fontSize: '$xl',
+    },
   },
 
   p: {
@@ -21,6 +25,10 @@ export const SuccessContainer = styled('main', {
     marginTop: '2rem',
     maxWidth: 560,
     textAlign: 'center',
+
+    '@media (max-width: 768px)': {
+      fontSize: '$lg',
+    },
   },
 
   a: {
@@ -33,6 +41,10 @@ export const SuccessContainer = styled('main', {
 
     '&:hover': {
       color: '$green300',
+    },
+
+    '@media (max-width: 768px)': {
+      fontSize: '$md',
     },
   },
 })
